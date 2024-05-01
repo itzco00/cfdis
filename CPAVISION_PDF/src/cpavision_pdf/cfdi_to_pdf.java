@@ -27,7 +27,6 @@ public class cfdi_to_pdf {
     private List<cfdi_xml_data_uuid> xml_data_uuid;
     private List<cfdi_xml_data_hdr_tbl> xml_data_hdr_tbl;
     private List<cfdi_xml_data_conceptos> xml_data_conceptos;
-    private List<cfdi_xml_data_pedimentos> xml_data_pedimentos;
 
     // Constructor que acepta la lista xml_data
     public cfdi_to_pdf(
@@ -35,15 +34,13 @@ public class cfdi_to_pdf {
             List<cfdi_xml_data_receptor> xml_data_receptor,
             List<cfdi_xml_data_uuid> xml_data_uuid,
             List<cfdi_xml_data_hdr_tbl> xml_data_hdr_tbl,
-            List<cfdi_xml_data_conceptos> xml_data_conceptos,
-            List<cfdi_xml_data_pedimentos> xml_data_pedimentos
+            List<cfdi_xml_data_conceptos> xml_data_conceptos
     ) {
         this.xml_data = xml_data;
         this.xml_data_receptor = xml_data_receptor;
         this.xml_data_uuid = xml_data_uuid;
         this.xml_data_hdr_tbl = xml_data_hdr_tbl;
         this.xml_data_conceptos = xml_data_conceptos;
-        this.xml_data_pedimentos = xml_data_pedimentos;
     }
 
     public void plantilla() {
@@ -149,8 +146,6 @@ public class cfdi_to_pdf {
                 table.addCell(cell);
             }
 
-            // Suponiendo que tienes los datos para la nueva fila en un arreglo
-            //String[] rowData = {"Dato 1", "Dato 2", "Dato 3", "Dato 4", "Dato 5", "Dato 6", "Dato 7", "Dato 8"};
             // Agregar una fila con los datos especificados
             for (cfdi_xml_data_conceptos concepto : xml_data_conceptos) {
                 // Agregar una fila para el concepto actual
@@ -168,10 +163,11 @@ public class cfdi_to_pdf {
                 finalCell.setColspan(8); // Unificar todas las columnas en una sola celda
                 table.addCell(finalCell);
 
-                for (cfdi_xml_data_pedimentos pedimento : xml_data_pedimentos) {
-                    PdfPCell infoaduana = new PdfPCell(new Phrase(pedimento.getnumeroPedimento(), fontTableh));
-                    infoaduana.setColspan(8); // Unificar todas las columnas en una sola celda
-                    table.addCell(infoaduana);
+                List<String> pedimentos = concepto.getPedimentos(); // Suponiendo que existe un método getPedimentos en cfdi_xml_data_conceptos
+                for (String pedimento : pedimentos) {
+                    PdfPCell pedimentoCell = new PdfPCell(new Phrase(pedimento, fontTableh));
+                    pedimentoCell.setColspan(8); // Establecer el mismo colspan que la fila final
+                    table.addCell(pedimentoCell);
                 }
 
             }
@@ -189,10 +185,14 @@ public class cfdi_to_pdf {
             float[] columnTotals = {2, 3}; // por ejemplo, una proporción de 2:3
             tabletotal.setWidths(columnTotals);
 
+            
+            String totaltbl = xml_data_hdr_tbl.get(0).gettotal();
+            String subtotaltbl = xml_data_hdr_tbl.get(0).getsubtotal();
+            
             // Datos para llenar la tabla (2 columnas x 3 filas)
-            String[] cellTexts = {"Subtotal", "28805.72",
+            String[] cellTexts = {"Subtotal", subtotaltbl,
                 "IVA Tra 16.00%", "28805.72",
-                "Total", "28805.72"};
+                "Total", totaltbl};
 
             // Agregar datos a la tabla
             for (String text : cellTexts) {

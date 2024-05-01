@@ -1,6 +1,10 @@
 package cpavision_pdf;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class cfdi_xml_data_conceptos {
+
     private String claveProdServ;
     private String noIdentificacion;
     private String cantidad;
@@ -10,7 +14,8 @@ public class cfdi_xml_data_conceptos {
     private String valorUnitario;
     private String importe;
     private String cadenarow;
-    
+    private List<String> pedimentos; // Lista para almacenar los pedimentos por cada concepto
+
     public cfdi_xml_data_conceptos(String claveProdServ, String noIdentificacion, String cantidad, String claveUnidad, String unidad, String descripcion, String valorUnitario, String importe, String cadenarow) {
         this.claveProdServ = claveProdServ;
         this.noIdentificacion = noIdentificacion;
@@ -21,6 +26,7 @@ public class cfdi_xml_data_conceptos {
         this.valorUnitario = valorUnitario;
         this.importe = importe;
         this.cadenarow = cadenarow;
+        this.pedimentos = new ArrayList<>(); // Inicializar la lista de pedimentos
     }
 
     public String getClaveProdServ() {
@@ -86,12 +92,21 @@ public class cfdi_xml_data_conceptos {
     public void setImporte(String importe) {
         this.importe = importe;
     }
-    
+
     public String getCadenarow() {
         return cadenarow;
     }
 
     public void setCadenarow(String cadenarow) {
         this.cadenarow = cadenarow;
+    }
+
+    // Métodos para agregar y obtener pedimentos
+    public void agregarPedimento(String pedimento) {
+        pedimentos.add(pedimento);
+    }
+
+    public List<String> getPedimentos() {
+        return pedimentos;
     }
 }

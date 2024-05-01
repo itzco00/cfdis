@@ -24,7 +24,6 @@ public class cfdi_xml_read {
         List<cfdi_xml_data_uuid> xml_data_uuid = new ArrayList<>();
         List<cfdi_xml_data_hdr_tbl> xml_data_hdr_tbl = new ArrayList<>();
         List<cfdi_xml_data_conceptos> xml_data_conceptos = new ArrayList<>();
-        List<cfdi_xml_data_pedimentos> xml_data_pedimentos = new ArrayList<>();
         try {
             // Ruta del archivo XML
             String rutaArchivo = "C:\\cfdi_uuid\\2024\\tst\\48691869-1d6a-4c28-95aa-f7f03d8286bf.xml";
@@ -555,6 +554,7 @@ public class cfdi_xml_read {
                 System.out.println("RFC del proveedor de certificacion: " + rfcprovcertif);
             }
 
+            cfdi_xml_data_conceptos concepto = null;
             // Iterar sobre cada elemento <cfdi:Concepto>
             for (int i = 0; i < conceptosList.getLength(); i++) {
                 Node conceptosNode = conceptosList.item(i);
@@ -630,7 +630,7 @@ public class cfdi_xml_read {
                                     String cadenarow = objetoimpuesto + "   Impuesto Trasladado.    Base: " + base + "  Impuesto: " + impuesto + "   Tipo factor: " + tipofactortraslado + "     Tasa o Cuota: " + tasaocuotatraslado + "    Importe: " + importeTraslado;
                                     System.out.println(cadenarow);
 
-                                    cfdi_xml_data_conceptos concepto = new cfdi_xml_data_conceptos(claveprodserv, noidentificacion, cantidad, claveunidad, unidad, descripcion, valorunitario, importe, cadenarow);
+                                    concepto = new cfdi_xml_data_conceptos(claveprodserv, noidentificacion, cantidad, claveunidad, unidad, descripcion, valorunitario, importe, cadenarow);
                                     xml_data_conceptos.add(concepto);
                                 }
                             }
@@ -646,8 +646,7 @@ public class cfdi_xml_read {
                                     String numeroPedimento = informacionAduaneraElement.getAttribute("NumeroPedimento");
                                     System.out.println("Informacion Aduanera.  Numero de Pedimento: " + numeroPedimento);
                                     
-                                    cfdi_xml_data_pedimentos pedimento = new cfdi_xml_data_pedimentos(numeroPedimento);
-                                    xml_data_pedimentos.add(pedimento);
+                                    concepto.agregarPedimento(numeroPedimento);
                                 }
                             }
                         }
@@ -658,6 +657,6 @@ public class cfdi_xml_read {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new cfdi_xml_lists_datas(xml_data, xml_data_receptor, xml_data_uuid, xml_data_hdr_tbl, xml_data_conceptos, xml_data_pedimentos);
+        return new cfdi_xml_lists_datas(xml_data, xml_data_receptor, xml_data_uuid, xml_data_hdr_tbl, xml_data_conceptos);
     }
 }
